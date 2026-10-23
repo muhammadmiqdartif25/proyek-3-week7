@@ -41,7 +41,7 @@
 
                         @if ($habis)
                             <button type="button" disabled>Tidak dapat dibeli</button>
-                        @elseif (auth()->check())
+                        @elseif (auth()->check() && auth()->user()->can('use-cart'))
                             <form method="POST" action="{{ route('keranjang.store') }}">
                                 @csrf
                                 <input type="hidden" name="id_barang" value="{{ $item->id_barang }}">

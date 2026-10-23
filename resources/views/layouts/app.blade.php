@@ -22,15 +22,21 @@
 
                 @auth
                     <li>
-                        <a href="{{ route('keranjang.index') }}"
-                            @if (request()->routeIs('keranjang.*')) aria-current="page" @endif>
-                            Keranjang
-                            @php $jumlahKeranjang = \App\Support\Keranjang::jumlahItem(); @endphp
-                            @if ($jumlahKeranjang > 0)
-                                <span class="bantuan">({{ $jumlahKeranjang }})</span>
-                            @endif
-                        </a>
+                        <a href="{{ route('dashboard') }}"
+                            @if (request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
                     </li>
+                    @if (auth()->check() && auth()->user()->can('use-cart'))
+                        <li>
+                            <a href="{{ route('keranjang.index') }}"
+                                @if (request()->routeIs('keranjang.*')) aria-current="page" @endif>
+                                Keranjang
+                                @php $jumlahKeranjang = \App\Support\Keranjang::jumlahItem(); @endphp
+                                @if ($jumlahKeranjang > 0)
+                                    <span class="bantuan">({{ $jumlahKeranjang }})</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endif
                     <li>
                         <a href="{{ route('riwayat.index') }}"
                             @if (request()->routeIs('riwayat.*')) aria-current="page" @endif>Riwayat Pesanan</a>

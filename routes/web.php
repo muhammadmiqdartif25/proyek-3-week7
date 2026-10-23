@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BarangController::class, 'index'])->name('barang.index');
@@ -19,10 +21,18 @@ Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
-    Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
-    Route::patch('/keranjang', [KeranjangController::class, 'update'])->name('keranjang.update');
-    Route::delete('/keranjang', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::middleware(['can:use-cart'])->group(function () {
+        Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang.index');
+        Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
+        Route::patch('/keranjang', [KeranjangController::class, 'update'])->name('keranjang.update');
+        Route::delete('/keranjang', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
+    });
+
+    Route::patch('/admin/users/{user}/role', [RoleController::class, 'update'])
+        ->middleware(['can:manage-roles'])
+        ->name('admin.users.role.update');
 
     Route::get('/checkout', [CheckoutController::class, 'form'])->name('checkout.form');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
